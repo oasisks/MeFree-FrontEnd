@@ -8,6 +8,7 @@ const password = ref("");
 const { loginUser, updateSession } = useUserStore();
 
 async function login() {
+  console.log(username.value, password.value);
   await loginUser(username.value, password.value);
   void updateSession();
   void router.push({ name: "Home" });
@@ -34,8 +35,8 @@ async function login() {
 </template>
 
 <style scoped>
+
 h3 {
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 </style>
