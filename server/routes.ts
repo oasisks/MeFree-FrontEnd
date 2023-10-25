@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Category, CensoredWordList, Component, DiscussionTopic, Friend, Group, Point, Post, Profile, User, Vote, WebSession } from "./app";
+import { Category, CensoredWordList, Component, DiscussionTopic, Friend, Group, Point, Post, Profile, Spotlights, User, Vote, WebSession } from "./app";
 import { ComponentDocs } from "./concepts/component";
 import { BadValuesError } from "./concepts/errors";
 import { PostDoc, PostOptions } from "./concepts/post";
@@ -430,13 +430,6 @@ class Routes {
     return await DiscussionTopic.changeArchive(_id, s);
   }
 
-  @Router.get("/spotlights")
-  async getSpotLights(session: WebSessionDoc) {
-    await WebSession.isLoggedIn(session);
-    const categories = await Category.getAllCategories("discussion");
-    return await DiscussionTopic.getSpotLights(categories);
-  }
-
   @Router.get("/discussions")
   async getAllTopics(session: WebSessionDoc) {
     await WebSession.isLoggedIn(session);
@@ -495,6 +488,36 @@ class Routes {
   @Router.get("/categories")
   async getAllCategories(categoryType: string) {
     return await Category.getAllCategories(categoryType);
+  }
+  @Router.get("/spotlights")
+  async getAllSpotlights() {
+    return await Spotlights.getSpotLights();
+  }
+
+  @Router.post("/spotlights")
+  async chooseRandomSpotlight() {
+    let users = await User.getUsers();
+    const spotlights = await Spotlights.getSpotLights();
+    spotlights.forEach((spotlight) => {
+      users = users.filter((user) => !user._id.equals(spotlight.creator));
+    });
+    // this means there are no unique people left to give spotlight
+    if (users.length === 0) {
+      return { msg: "Can't pick spotlight not enough user", topic: null };
+    }
+    const user = users[Math.floor(Math.random() * users.length)];
+    const post = await Post.create(user._id, "Test");
+    return await Spotlights.createTopic("SPOTLIGHT", post.post!._id, user._id);
+  }
+
+  @Router.delete("/spotlights")
+  async deleteAllSpotlights() {
+    return await Spotlights.deleteAllSpotLights();
+  }
+
+  @Router.delete("/spotlights/:_id")
+  async deleteSpotlight(_id: ObjectId) {
+    return await Spotlights.deleteSpotlight(_id);
   }
 }
 
