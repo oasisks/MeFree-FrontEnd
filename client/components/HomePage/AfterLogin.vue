@@ -4,6 +4,7 @@ import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
 import PostListComponent from "../Post/PostListComponent.vue";
+import Spotlight from "../Spotlights/Spotlight.vue";
 
 
 const { isLoggedIn } = storeToRefs(useUserStore());
@@ -44,6 +45,7 @@ async function update() {
         const today = new Date();
 
         const diff = (today.getTime() - createDate.getTime()) / (1000 * 60 * 60)
+        console.log(diff);
         // if we have passed the 24 hour period
         if (diff >= 24) {
             // we will delete that spotlight
@@ -81,7 +83,8 @@ onBeforeMount(async () => {
     // that needs to be updated
     // very sus but its the best we can do without a dedicated server
     await update();
-    
+
+    // I also need to load in the posts associated with the spotlight
     loaded.value = true;
 })
 </script>
@@ -93,7 +96,7 @@ onBeforeMount(async () => {
             <TabPanel header="Spotlights">
                 <section v-if="loaded && spotlights.length !== 0">
                     <article v-for="topic in spotlights" :key="topic._id">
-                        <p>Insert a topic component</p>
+                        <Spotlight :topic="topic"/>
                     </article>
                 </section>
                 <p v-else-if="loaded">No spotlights found :(</p>
@@ -128,6 +131,8 @@ onBeforeMount(async () => {
     width: 80%;
     padding-left: 5em;
     padding-top: 2em;
+    inline-size: 80%;
+    overflow-wrap: break-word;
 }
 
 .row-tabs{

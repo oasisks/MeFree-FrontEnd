@@ -3,8 +3,8 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 
 export interface SpotlightDoc extends BaseDoc {
   title: string;
-  posts: ObjectId;
   creator: ObjectId;
+  content: string;
 }
 
 export default class SpotLightConcept {
@@ -17,8 +17,9 @@ export default class SpotLightConcept {
    * @param creator the creator of the topic
    * @returns success message and the topic
    */
-  async createTopic(title: string, posts: ObjectId, creator: ObjectId) {
-    const _id = await this.topics.createOne({ title, posts, creator });
+  async createTopic(title: string, creator: ObjectId) {
+    const content = "";
+    const _id = await this.topics.createOne({ title, creator, content });
     return { msg: "Successfully created a spotlight topic", topic: await this.topics.readOne({ _id }) };
   }
 

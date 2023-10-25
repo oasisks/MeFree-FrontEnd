@@ -83,6 +83,11 @@ class Routes {
     return Responses.posts(posts);
   }
 
+  @Router.get("/posts/author/:_id")
+  async getPostByAuthor(_id: ObjectId) {
+    return { msg: "Success", post: await Post.getByAuthor(_id) };
+  }
+
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string, options?: PostOptions) {
     const user = WebSession.getUser(session);
@@ -506,17 +511,18 @@ class Routes {
       return { msg: "Can't pick spotlight not enough user", topic: null };
     }
     const user = users[Math.floor(Math.random() * users.length)];
-    const post = await Post.create(user._id, "Test");
-    return await Spotlights.createTopic("SPOTLIGHT", post.post!._id, user._id);
-  }
 
-  @Router.delete("/spotlights")
-  async deleteAllSpotlights() {
-    return await Spotlights.deleteAllSpotLights();
+    const spotlight = await Spotlights.createTopic(`Spotlight: ${user.username}`, user._id);
+
+    return spotlight;
   }
 
   @Router.delete("/spotlights/:_id")
   async deleteSpotlight(_id: ObjectId) {
+    const posts = await Post.getByAuthor(_id);
+    posts.forEach(async (post) => {
+      await Post.delete(post._id);
+    });
     return await Spotlights.deleteSpotlight(_id);
   }
 }

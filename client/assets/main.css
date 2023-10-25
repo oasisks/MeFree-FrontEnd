@@ -36,8 +36,7 @@ a.button {
   gap: 1em;
 }
 
-.title-text {
-  font-size: 3em;
+.roboto-font {
   font-family: 'Roboto', sans-serif;
   color: black;
 }
