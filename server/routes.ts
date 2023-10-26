@@ -253,18 +253,14 @@ class Routes {
   }
 
   @Router.post("/groups")
-  async createGroup(session: WebSessionDoc, status: boolean = false) {
+  async createGroup(session: WebSessionDoc, title: string) {
     const user = WebSession.getUser(session);
     const posts = new Array<ObjectId>();
     const residents = new Array<ObjectId>();
     const censoredWordList = await CensoredWordList.create();
 
     residents.push(user);
-    if (typeof status !== "boolean") {
-      return await Group.createGroup(user, residents, false, censoredWordList.list!._id, posts);
-    }
-
-    return await Group.createGroup(user, residents, status, censoredWordList.list!._id, posts);
+    return await Group.createGroup(user, residents, false, censoredWordList.list!._id, posts, title);
   }
 
   @Router.get("/group")
@@ -484,7 +480,7 @@ class Routes {
     });
     // this means there are no unique people left to give spotlight
     if (users.length === 0) {
-      return { msg: "Can't pick spotlight not enough user", topic: null };
+      return { msg: "", topic: null };
     }
     const user = users[Math.floor(Math.random() * users.length)];
 

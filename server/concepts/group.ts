@@ -9,6 +9,7 @@ export interface GroupDoc extends BaseDoc {
   censoredWordList: ObjectId;
   posts: Array<ObjectId>;
   votes: Array<ObjectId>;
+  title: string;
 }
 
 export default class GroupConcept {
@@ -17,9 +18,9 @@ export default class GroupConcept {
   /**
    * Groups don't have to be unique owner, as we can make as many groups as we want
    */
-  async createGroup(owner: ObjectId, residents: Array<ObjectId>, status: boolean = false, censoredWordList: ObjectId, posts: Array<ObjectId>) {
+  async createGroup(owner: ObjectId, residents: Array<ObjectId>, status: boolean = false, censoredWordList: ObjectId, posts: Array<ObjectId>, title: string) {
     const votes = new Array<ObjectId>();
-    const _id = await this.groups.createOne({ owner, residents, status, censoredWordList, posts, votes });
+    const _id = await this.groups.createOne({ owner, residents, status, censoredWordList, posts, votes, title });
     return { msg: "Successfully created a group", id: await this.groups.readOne({ _id }) };
   }
 

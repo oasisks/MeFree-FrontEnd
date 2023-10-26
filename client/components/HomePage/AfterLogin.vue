@@ -3,7 +3,6 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
-import PostListComponent from "../Post/PostListComponent.vue";
 import Spotlight from "../Spotlights/Spotlight.vue";
 
 
@@ -81,6 +80,12 @@ async function update() {
             if (result.topic === null) {
                 break;
             }
+            
+            if (currentUsername.value === result.topic.title.replace("Spotlight: ", "")) {
+                spotlightSelected.value = true;
+                content.value = result.topic.content;
+                user_spotlight.value = result.topic;
+            }
         } catch(_) {
 
         }
@@ -109,7 +114,6 @@ async function saveContent() {
 
 async function cancelEdit() {
     editing.value = false;
-    content.value = "";
 }
 
 onBeforeMount(async () => {
@@ -119,7 +123,7 @@ onBeforeMount(async () => {
     // that needs to be updated
     // very sus but its the best we can do without a dedicated server
     await update();
-
+    console.log(spotlightSelected.value);
     // I also need to load in the posts associated with the spotlight
     loaded.value = true;
 })
@@ -182,7 +186,6 @@ onBeforeMount(async () => {
                 <template #title> Pending Votes</template>
                 <template #content>
                     <p>This is the place where all of your votes from all of your groups exists. Feel free to click on them when you feel like it :).</p>
-                    <p>TODO: populate them with voting cards</p>
                 </template>
             </Card>
         </div>
@@ -191,7 +194,7 @@ onBeforeMount(async () => {
         </div>
     </div>
 
-    <PostListComponent />
+    <!-- <PostListComponent /> -->
 </template>
 
 <style scoped>
@@ -231,6 +234,7 @@ onBeforeMount(async () => {
     flex-direction: column;
     gap: 1em;
     align-items: center;
+    overflow-wrap: break-word;
 }
 
 </style>
