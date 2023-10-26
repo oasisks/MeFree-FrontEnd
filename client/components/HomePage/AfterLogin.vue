@@ -7,10 +7,13 @@ import PostListComponent from "../Post/PostListComponent.vue";
 import Spotlight from "../Spotlights/Spotlight.vue";
 
 
-const { isLoggedIn } = storeToRefs(useUserStore());
+const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 let spotlights = ref<Array<Record<string, string>>>([]);
 let groups = ref<Array<Record<string, string>>>([]);
 const loaded = ref(false);
+const spotlightSelected = ref(false);
+const editing = ref(false);
+const content = ref("");
 
 async function getSpotlights() {
     let topicResults;
@@ -36,6 +39,10 @@ async function getGroups() {
     groups.value = groupResults;
 }
 
+async function onClickToSpotlight() {
+    editing.value = true;
+}
+
 async function update() {
     let result;
 
@@ -54,6 +61,12 @@ async function update() {
             } catch (_) {
                 
             }
+        }
+        const username = spotlight.title.replace("Spotlight: ", "");
+
+        if (username === currentUsername.value) {
+            spotlightSelected.value = true;
+            content.value = spotlight.content;
         }
     })
 
@@ -115,8 +128,41 @@ onBeforeMount(async () => {
         </TabView>
         </div>
         <div class="column-right">
-            <p>Place to notify that its your turn for spotlight</p>
-            <p>Pending votes</p>
+            <Card>
+                <template #title> Spotlight Notification</template>
+                <template #content>
+                    <template v-if="spotlightSelected">
+                        <p>Wow you got selected to be on the spotlight. Please click the button below and write your story :).</p>
+                        <Button v-if="!editing" @click="onClickToSpotlight">
+                            Click me for your spotlight :)
+                        </Button>
+                        <div v-else class="column-flex">
+                            <Textarea v-model="content" rows="5" cols="60" autoResize>
+
+                            </Textarea>
+                            <div class="row-flex">
+                                <Button>
+                                    Save
+                                </Button>
+                                <Button>
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+
+                    </template>
+                    <template v-else>
+                        <p>Sorry, you are not selected to be a spotlight just yet. Come back after 24 hours and see if you are selected.</p>
+                    </template>
+                </template>
+            </Card>
+            <Card>
+                <template #title> Pending Votes</template>
+                <template #content>
+                    <p>This is the place where all of your votes from all of your groups exists. Feel free to click on them when you feel like it :).</p>
+                    <p>TODO: populate them with voting cards</p>
+                </template>
+            </Card>
         </div>
     </div>
 
@@ -138,13 +184,28 @@ onBeforeMount(async () => {
 .row-tabs{
     display: flex;
     flex-direction: row;
-    align-items: center;
     width: 90%;
 }
 
-.column-right {
+.column-flex {
     display: flex;
     flex-direction: column;
+}
+
+.row-flex {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1em;
+    gap: 2em;
+}
+
+.column-right {
+    padding-left: 5em;
+    padding-top: 3em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
 }
 
 </style>
