@@ -9,7 +9,6 @@ async function getGroups() {
 
 <template>
 
-
 </template>
 
 <style scoped>

@@ -9,11 +9,13 @@ import Spotlight from "../Spotlights/Spotlight.vue";
 const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 let spotlights = ref<Array<Record<string, string>>>([]);
 let groups = ref<Array<Record<string, string>>>([]);
+const friendRequests = ref<Map<string, Array<Record<string, string>>>>(new Map());
 const loaded = ref(false);
 const spotlightSelected = ref(false);
 const editing = ref(false);
 const content = ref("");
 const user_spotlight = ref<Record<string, string>>();
+const friends = ref<Array<Record<string, string>>>([]);
 
 async function getSpotlights() {
     let topicResults;
@@ -52,7 +54,6 @@ async function update() {
         const today = new Date();
 
         const diff = (today.getTime() - createDate.getTime()) / (1000 * 60 * 60)
-        console.log(diff);
         // if we have passed the 24 hour period
         if (diff >= 24) {
             // we will delete that spotlight
@@ -116,6 +117,44 @@ async function cancelEdit() {
     editing.value = false;
 }
 
+async function getFriendRequest() {
+    let result;
+    try {
+        result = await fetchy("/api/friend/requests", "GET");
+    } catch(_) {
+        return;
+    }
+
+    result.forEach((request: Record<string, string>) => {
+        const from = request.from;
+        const to = request.to;
+        // we don't care about any requests that has already been accepted
+        if (request.status === "accepted") {
+            return;
+        }
+        if (friendRequests.value.has(from)) {
+            const value = friendRequests.value.get(from);
+            value!.push(request);
+        } else {
+            friendRequests.value.set(from, [request]);
+        }
+        if (friendRequests.value.has(to)) {
+            const value = friendRequests.value.get(to);
+            value!.push(request);
+        } else {
+            friendRequests.value.set(to, [request]);
+        }
+    })
+}
+
+async function getFriends() {
+    try {
+        friends.value = await fetchy("/api/friends", "GET");
+    } catch (_) {
+        return;
+    }
+}
+
 onBeforeMount(async () => {
     await getSpotlights();
     await getGroups();
@@ -123,7 +162,8 @@ onBeforeMount(async () => {
     // that needs to be updated
     // very sus but its the best we can do without a dedicated server
     await update();
-    console.log(spotlightSelected.value);
+    await getFriendRequest();
+    await getFriends();
     // I also need to load in the posts associated with the spotlight
     loaded.value = true;
 })
@@ -136,7 +176,7 @@ onBeforeMount(async () => {
             <TabPanel header="Spotlights">
                 <section v-if="loaded && spotlights.length !== 0">
                     <article v-for="topic in spotlights" :key="topic._id">
-                        <Spotlight :topic="topic"/>
+                        <Spotlight :topic="topic" :friends="friends" :requests="friendRequests.get(topic.title.replace('Spotlight: ', ''))"/>
                     </article>
                 </section>
                 <p v-else-if="loaded">No spotlights found :(</p>

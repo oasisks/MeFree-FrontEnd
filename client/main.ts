@@ -13,6 +13,8 @@ import "primevue/resources/primevue.min.css";
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import ScrollPanel from "primevue/scrollpanel";
 
+import Splitter from "primevue/splitter";
+import SplitterPanel from "primevue/splitterpanel";
 import TabPanel from "primevue/tabpanel";
 import TabView from "primevue/tabview";
 import Textarea from "primevue/textarea";
@@ -38,5 +40,7 @@ app.component("Card", Card);
 app.component("Textarea", Textarea);
 app.component("ScrollPanel", ScrollPanel);
 app.component("Divider", Divider);
+app.component("Splitter", Splitter);
+app.component("SplitterPanel", SplitterPanel);
 
 app.mount("#app");

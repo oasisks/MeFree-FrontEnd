@@ -29,12 +29,11 @@ class Routes {
   }
 
   @Router.post("/users")
-  async createUser(session: WebSessionDoc, username: string, password: string, name: string, sex: string, dob: string) {
+  async createUser(session: WebSessionDoc, username: string, password: string) {
     WebSession.isLoggedOut(session);
     const user = (await User.create(username, password)).user;
     if (user) {
-      const pointDoc = (await Point.initializePoints(user._id)).point;
-      await Profile.initializeProfile(user._id, name, sex, dob, pointDoc!._id);
+      (await Point.initializePoints(user._id)).point;
     }
     return { msg: "Successfully created an user", user: user };
   }
@@ -49,11 +48,12 @@ class Routes {
   async deleteUser(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
     WebSession.end(session);
-    await Profile.deleteProfile(user);
     await Point.deletePoints(user);
 
     // when the user gets deleted, the user needs to not exist in any group
     const word_lists = (await Group.kickFromAllGroups(user)).wordList;
+
+    // this is to get rid of any word that disappeared from the group disappearing
     await Promise.all(word_lists.map((word) => CensoredWordList.delete(word)));
     return await User.delete(user);
   }
