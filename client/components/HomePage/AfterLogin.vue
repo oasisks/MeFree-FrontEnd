@@ -14,6 +14,7 @@ const loaded = ref(false);
 const spotlightSelected = ref(false);
 const editing = ref(false);
 const content = ref("");
+const user_spotlight = ref<Record<string, string>>();
 
 async function getSpotlights() {
     let topicResults;
@@ -67,6 +68,7 @@ async function update() {
         if (username === currentUsername.value) {
             spotlightSelected.value = true;
             content.value = spotlight.content;
+            user_spotlight.value = spotlight;
         }
     })
 
@@ -88,6 +90,27 @@ async function update() {
     await getSpotlights();
 }
 
+async function saveContent() {
+    // once this function is called, we will save whatever
+    // is in context to the database
+    let _id = user_spotlight.value ? user_spotlight.value._id : "";
+    let new_content = content.value;
+    console.log(new_content);
+    let query: Record<string, string> = { content: new_content };
+    try {
+        let result = await fetchy(`/api/spotlights/${_id}`, "PATCH", { query });
+        console.log(result);
+    } catch(_) {
+        return;
+    }
+    await getSpotlights();
+    editing.value = false;
+}
+
+async function cancelEdit() {
+    editing.value = false;
+    content.value = "";
+}
 
 onBeforeMount(async () => {
     await getSpotlights();
@@ -127,7 +150,7 @@ onBeforeMount(async () => {
             </TabPanel>
         </TabView>
         </div>
-        <div class="column-right">
+        <div class="column-right" v-if="loaded">
             <Card>
                 <template #title> Spotlight Notification</template>
                 <template #content>
@@ -141,15 +164,14 @@ onBeforeMount(async () => {
 
                             </Textarea>
                             <div class="row-flex">
-                                <Button>
+                                <Button @click="saveContent">
                                     Save
                                 </Button>
-                                <Button>
+                                <Button @click="cancelEdit">
                                     Cancel
                                 </Button>
                             </div>
                         </div>
-
                     </template>
                     <template v-else>
                         <p>Sorry, you are not selected to be a spotlight just yet. Come back after 24 hours and see if you are selected.</p>
@@ -163,6 +185,9 @@ onBeforeMount(async () => {
                     <p>TODO: populate them with voting cards</p>
                 </template>
             </Card>
+        </div>
+        <div v-else class="column-right">
+            <p>loading</p>
         </div>
     </div>
 

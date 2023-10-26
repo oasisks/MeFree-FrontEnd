@@ -37,4 +37,13 @@ export default class SpotLightConcept {
   async deleteSpotlight(_id: ObjectId) {
     return await this.topics.deleteOne({ creator: _id });
   }
+
+  async updateContent(_id: ObjectId, content: string) {
+    const spotlight = await this.topics.readOne({ _id });
+    if (spotlight) {
+      spotlight.content = content;
+      return await this.topics.updateOne({ _id }, spotlight);
+    }
+    return { msg: "Can't find the spotlight" };
+  }
 }

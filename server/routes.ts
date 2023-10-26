@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Category, CensoredWordList, Component, DiscussionTopic, Friend, Group, Point, Post, Profile, Spotlights, User, Vote, WebSession } from "./app";
+import { CensoredWordList, Component, DiscussionTopic, Friend, Group, Point, Post, Profile, Spotlights, User, Vote, WebSession } from "./app";
 import { ComponentDocs } from "./concepts/component";
 import { BadValuesError } from "./concepts/errors";
 import { PostDoc, PostOptions } from "./concepts/post";
@@ -470,30 +470,6 @@ class Routes {
     return await Component.getAllComponents();
   }
 
-  @Router.post("/categories")
-  async createCategory(label: string, items: Array<ObjectId>, categoryType: string) {
-    return await Category.createCategory(label, items, categoryType);
-  }
-
-  @Router.delete("/categories/:id")
-  async deletCategory(_id: ObjectId) {
-    return await Category.deleteCategory(_id);
-  }
-
-  @Router.delete("/categories/:id/:elt")
-  async deleteElement(_id: ObjectId, elt: ObjectId) {
-    return await Category.deleteElement(_id, elt);
-  }
-
-  @Router.patch("/categories/:id/:elt")
-  async addElement(_id: ObjectId, elt: ObjectId) {
-    return await Category.addElement(_id, elt);
-  }
-
-  @Router.get("/categories")
-  async getAllCategories(categoryType: string) {
-    return await Category.getAllCategories(categoryType);
-  }
   @Router.get("/spotlights")
   async getAllSpotlights() {
     return await Spotlights.getSpotLights();
@@ -515,6 +491,11 @@ class Routes {
     const spotlight = await Spotlights.createTopic(`Spotlight: ${user.username}`, user._id);
 
     return spotlight;
+  }
+
+  @Router.patch("/spotlights/:_id")
+  async updateContent(_id: ObjectId, content: string) {
+    return await Spotlights.updateContent(_id, content);
   }
 
   @Router.delete("/spotlights/:_id")
