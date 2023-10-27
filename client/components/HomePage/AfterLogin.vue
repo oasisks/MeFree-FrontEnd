@@ -154,6 +154,7 @@ async function getFriends() {
     } catch (_) {
         return;
     }
+    return friends.value;
 }
 
 onBeforeMount(async () => {
@@ -185,7 +186,7 @@ onBeforeMount(async () => {
             </TabPanel>
 
             <TabPanel header="Your Groups">
-                <GroupListComponent />
+                <GroupListComponent @getFriends="getFriends"/>
             </TabPanel>
         </TabView>
         </div>

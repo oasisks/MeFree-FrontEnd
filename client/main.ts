@@ -13,6 +13,8 @@ import "primevue/resources/primevue.min.css";
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import ScrollPanel from "primevue/scrollpanel";
 
+import MultiSelect from "primevue/multiselect";
+
 import SplitButton from "primevue/splitbutton";
 import Splitter from "primevue/splitter";
 import SplitterPanel from "primevue/splitterpanel";
@@ -48,5 +50,6 @@ app.component("Splitter", Splitter);
 app.component("SplitterPanel", SplitterPanel);
 app.component("Toolbar", Toolbar);
 app.component("SplitButton", SplitButton);
+app.component("MultiSelect", MultiSelect);
 
 app.mount("#app");

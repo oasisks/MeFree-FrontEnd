@@ -5,12 +5,6 @@ import { fetchy } from "../../utils/fetchy";
 import GroupCard from "./GroupCard.vue";
 import GroupChatComponent from "./GroupChatComponent.vue";
 
-const items = ref([
-    {
-        label: "Update",
-        icon: "pi pi-refresh"
-    }
-])
 
 const loaded = ref(false);
 const groups = ref<Array<Record<string, string>>>([]);
@@ -19,6 +13,8 @@ const searchQuery = ref("");
 const showChat = ref(false);
 const chatData = ref<Record<string, string>>();
 const chatMessage = ref("");
+const selectedUser = ref();
+const friends = ref<Array<string>>([]);
 
 async function getGroups() {
     // we are trying to get all of the groups associated with the user
@@ -54,6 +50,19 @@ async function searchGroup() {
     })
 
     groups.value = newGroup;
+}
+
+async function getFriends() {
+    let result;
+    try {
+        result = await fetchy("/api/friends", "GET");
+    } catch (_) {
+        return;
+    }
+
+    result.forEach((friend: string) => {
+        friends.value.push(friend);
+    })
 }
 
 async function showGroupChat(groupData: Record<string, string>) {
@@ -94,7 +103,9 @@ async function onPressEnter() {
 onBeforeMount(async () => {
     await getGroups();
     console.log(groups.value);
+    await getFriends();
     loaded.value = true;
+    console.log(friends.value);
 });
 
 </script>
@@ -138,7 +149,31 @@ onBeforeMount(async () => {
 
     <div v-else class="chat-column">
         <!-- In here we will show the chat logs and also the ability to chat -->
-        <p>Create Vote button</p>
+        <div class="row-space-between">
+            <div class="row">
+                <Button @click="() => {
+                        showChat = false;
+                }">
+                    <div class="row">
+                        <i class="pi pi-check" style="font-size: 1rem"></i>
+                        <span>Back Button</span>
+                    </div>
+                </Button>
+                <Button @click="() => {
+                    console.log('Create Vote');
+                }">
+                    <div class="row">
+                        <i class="pi pi-plus" style="font-size: 1rem"></i>
+                        <span>Create vote</span>
+                    </div>
+                </Button>
+            </div>
+            <div class="row">
+                <MultiSelect v-model="selectedUser" :options="friends" placeholder="Select Users">
+                </MultiSelect>
+                <Button label="Invite" @click="() => {console.log(selectedUser)}"/>
+            </div>
+        </div>
         <ScrollPanel style="width: 100%; height: 80%; border-style: groove; border-width: 0.5em;">
         <div v-if="chatData !== undefined" v-for="post in chatData.posts">
             <GroupChatComponent :post="post"/>
@@ -176,6 +211,18 @@ onBeforeMount(async () => {
     justify-content: end;
     height: 650px;
     gap: 0.5em;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.row-space-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 </style>
