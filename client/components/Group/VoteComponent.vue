@@ -91,14 +91,12 @@ onBeforeMount(async () => {
             </template>
             <template #content>
                 <div class="buttons">
-                    <Button label="Yes" @click="voteYes"/>
-                    <Button label="No" @click="voteNo"/>
+                    <Button label="Yes" @click="voteYes" style="background-color: #449DD1;"/>
+                    <Button label="No" @click="voteNo" style="background-color: #A72608;"/>
                 </div>
             </template>
         </Card>
     </div>
-
-<!-- <p>{{ voteData!.title }}</p> -->
 </template>
 
 <style scoped>

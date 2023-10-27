@@ -74,28 +74,25 @@ onBeforeMount(async () => {
     <p class="author roboto-font">{{ props.topic.title }} </p>
     <p class="description "> {{ props.topic.content === "" ? empty_context : props.topic.content }} </p>
     <Button style="background-color: #FFE066; color: black; font-family: 'Roboto', sans-serif;
-" v-if="currentUsername === props.topic.title.replace('Spotlight: ', '')">
-      Can't add your self :(
+" v-if="currentUsername === props.topic.title.replace('Spotlight: ', '')" label="Can't add your self :(">
+      
     </Button>
-    <Button v-else-if="areFriends">
-      Friends
+    <Button v-else-if="areFriends" label="Friends">
+      
     </Button>
     <Button style="background-color: #449DD1; font-family: 'Roboto', sans-serif;
 " v-else-if="!fromMe && !toMe" @click="sendRequest">
       Send Friend Request
     </Button>
     <Button style="background-color: #4A484E; font-family: 'Roboto', sans-serif;
-" v-else-if="fromMe && status === 'pending'">
-      Friend Request Already Sent
+" v-else-if="fromMe && status === 'pending'" label="Friend Request Already Sent">
     </Button>
     <Button style="background-color: #A72608; font-family: 'Roboto', sans-serif;
-" v-else-if="status === 'rejected'">
-      Rejected by user
+" v-else-if="status === 'rejected'" label="Rejected by user">
     </Button>
 
     <Button style="background-color: #4A484E; font-family: 'Roboto', sans-serif;
-" v-else-if="toMe && status === 'pending'">
-      They send a friend request
+" v-else-if="toMe && status === 'pending'" label="They send a friend request">
     </Button>
     <Divider />
 

@@ -36,7 +36,7 @@ async function createVote() {
 </script>
 
 <template>
-    <Button @click="visible = true">
+    <Button @click="visible = true" style="font-weight: bold; background-color: #449DD1;">
         <div class="row">
             <i class="pi pi-plus" style="font-size: 1rem"></i>
             <span>Create vote</span>
@@ -62,7 +62,7 @@ async function createVote() {
                     <InputText v-model="wordRef"/>
                 </div>
             </div>
-            <Button label="Create Vote" @click="createVote">
+            <Button label="Create Vote" @click="createVote" style="background-color: #449DD1;">
             </Button>
         </div>
     </Dialog>

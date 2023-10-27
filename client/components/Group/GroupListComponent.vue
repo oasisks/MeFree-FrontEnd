@@ -139,8 +139,8 @@ onBeforeMount(async () => {
             <span class="p-input-icon-left">
                 <i class="pi pi-search" />
                 <InputText placeholder="Search" v-model="searchQuery" />
-                <Button @click="searchGroup">
-                    Submit
+                <Button @click="searchGroup" label="Submit">
+                    
                 </Button>
             </span>
         </template>
@@ -149,11 +149,9 @@ onBeforeMount(async () => {
             <div class="column-create">
                 <div class="row-create">
                     <InputText type="text" placeholder="title" v-model="groupTitle"/>
-                    <Button v-if="groupTitle === ''" disabled>
-                        Create Group
+                    <Button v-if="groupTitle === ''" disabled label="Create Group">
                     </Button>
-                    <Button v-else @click="createGroup">
-                        Create Group
+                    <Button v-else @click="createGroup" label="Create Group">
                     </Button>
                 </div>
                 <small v-if="groupTitle === ''">Can't left blank</small>
@@ -175,10 +173,10 @@ onBeforeMount(async () => {
             <div class="row">
                 <Button @click="() => {
                         showChat = false;
-                }">
+                }" style="background-color: #4A484E;">
                     <div class="row">
                         <i class="pi pi-arrow-left" style="font-size: 1rem"></i>
-                        <span>Back Button</span>
+                        <span style="font-weight: bold;">Back Button</span>
                     </div>
                 </Button>
                 <CreateVote @refresh-votes="emit('refreshVotes')" :group-data="chatData"/>
@@ -186,7 +184,7 @@ onBeforeMount(async () => {
             <div class="row">
                 <Dropdown v-model="selectedUser" :options="friends" placeholder="Select Users">
                 </Dropdown>
-                <Button label="Invite" @click="inviteToGroup"/>
+                <Button label="Invite" @click="inviteToGroup" style="background-color: #449DD1;"/>
             </div>
         </div>
         <ScrollPanel style="width: 100%; height: 80%; border-style: groove; border-width: 0.5em;">

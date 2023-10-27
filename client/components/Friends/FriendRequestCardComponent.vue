@@ -47,11 +47,11 @@ async function declineRequest() {
                     <p>Request Sent {{ now.getHours() - dateCreated.getHours() }} Hours Ago</p>
                 </div>
                 <div class="row-buttons">
-                    <Button @click="acceptRequest">
-                        Accept Request
+                    <Button @click="acceptRequest" label="Accept Request" style="background-color: #449DD1;">
+                        
                     </Button>
-                    <Button @click="declineRequest">
-                        Decline Request
+                    <Button @click="declineRequest" label="Decline Request" style="background-color: #A72608;">
+                        
                     </Button>
                 </div>
 

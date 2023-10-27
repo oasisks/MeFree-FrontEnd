@@ -60,9 +60,10 @@ onBeforeMount(async () => {
 
 nav {
   padding: 1em 2em;
-  background-color: lightgray;
+  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
+  font-weight: bold;
 }
 
 h1 {

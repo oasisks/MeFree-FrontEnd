@@ -171,7 +171,7 @@ async function getVotes() {
             const v = vote[i];
             votePromises.push(fetchy(`/api/votes/${v}`, "GET"));
         }
-        
+
         const votingData = await Promise.all(votePromises);
         votingData.forEach((v: Record<string, string>) => {
             if (v.status === 'pending') {
@@ -230,8 +230,8 @@ onBeforeMount(async () => {
                 <template #content>
                     <template v-if="spotlightSelected">
                         <p>Wow you got selected to be on the spotlight. Please click the button below and write your story :).</p>
-                        <Button v-if="!editing" @click="onClickToSpotlight">
-                            Click me for your spotlight :)
+                        <Button style="background-color: #FFE066; color: #0D0A12;" label="Click me for your spotlight :)" v-if="!editing" @click="onClickToSpotlight">
+                            
                         </Button>
                         <div v-else class="column-flex">
                             <Textarea v-model="content" rows="5" cols="60" autoResize>
@@ -285,7 +285,8 @@ onBeforeMount(async () => {
 .row-tabs{
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 100%;
+    height: 100%;
 }
 
 .column-flex {
@@ -307,6 +308,7 @@ onBeforeMount(async () => {
     flex-direction: column;
     gap: 1em;
     align-items: center;
+    margin-right: 5em;
     overflow-wrap: break-word;
 }
 

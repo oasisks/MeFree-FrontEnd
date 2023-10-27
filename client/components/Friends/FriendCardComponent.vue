@@ -21,8 +21,8 @@ async function deleteFriend() {
         <template #title>{{ props.name}}</template>
         <template #subtitle>Status: Friend</template>
         <template #content>
-            <Button @click="deleteFriend">
-                Delete Friend
+            <Button @click="deleteFriend" label="Delete Friend" style="background-color: #A72608;">
+                
             </Button>
         </template>
     </Card>
