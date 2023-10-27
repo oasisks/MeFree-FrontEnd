@@ -4,6 +4,7 @@ import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
 import GroupListComponent from "../Group/GroupListComponent.vue";
+import VoteComponent from "../Group/VoteComponent.vue";
 import Spotlight from "../Spotlights/Spotlight.vue";
 
 
@@ -17,6 +18,7 @@ const editing = ref(false);
 const content = ref("");
 const user_spotlight = ref<Record<string, string>>();
 const friends = ref<Array<Record<string, string>>>([]);
+const votes = ref<Map<string, string>>(new Map());
 
 async function getSpotlights() {
     let topicResults;
@@ -148,13 +150,40 @@ async function getFriendRequest() {
     })
 }
 
+async function getVotes() {
+    // this function grabs all the votes that is related to the user
+    // we will need to get all of the users related groups
+    // and then list each of the votes in the votes component
+    votes.value = new Map();
+    let result;
+    try {
+        result = await fetchy("/api/groups", "GET");
+    } catch (_) {
+        return;
+    }
+    console.log(result)
+    result.forEach(async (group: Record<string, string>) => {
+        const vote = group.votes;
+        // we need to grab all of the votes that are pending
+        const votePromises = vote.map((v: string) => {
+            return fetchy(`/api/votes/${v}`, "GET");
+        })
+        const votingData = await Promise.all(votePromises);
+        votingData.forEach((v: Record<string, string>) => {
+            if (v.status === 'pending') {
+                console.log(v);
+                votes.value.set(v._id, group.title);
+            }
+        })
+    });
+}
+
 async function getFriends() {
     try {
         friends.value = await fetchy("/api/friends", "GET");
     } catch (_) {
         return;
     }
-    return friends.value;
 }
 
 onBeforeMount(async () => {
@@ -166,6 +195,7 @@ onBeforeMount(async () => {
     await update();
     await getFriendRequest();
     await getFriends();
+    await getVotes();
     // I also need to load in the posts associated with the spotlight
     loaded.value = true;
 })
@@ -186,7 +216,7 @@ onBeforeMount(async () => {
             </TabPanel>
 
             <TabPanel header="Your Groups">
-                <GroupListComponent @getFriends="getFriends"/>
+                <GroupListComponent @refreshVotes="getVotes"/>
             </TabPanel>
         </TabView>
         </div>
@@ -222,6 +252,9 @@ onBeforeMount(async () => {
                 <template #title> Pending Votes</template>
                 <template #content>
                     <p>This is the place where all of your votes from all of your groups exists. Feel free to click on them when you feel like it :).</p>
+                    <template v-if="votes.size !== 0" v-for="vote in votes" :key="vote[1]">
+                        <VoteComponent @refreshVotes="getVotes" :voteId="vote[0]" :groupTitle="vote[1]" />
+                    </template>
                 </template>
             </Card>
         </div>

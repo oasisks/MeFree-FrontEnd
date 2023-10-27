@@ -7,6 +7,7 @@ import "primeicons/primeicons.css";
 import Card from "primevue/card";
 import PrimeVue from "primevue/config";
 import Divider from "primevue/divider";
+import Dropdown from "primevue/dropdown";
 import Image from "primevue/image";
 import InputText from "primevue/inputtext";
 import "primevue/resources/primevue.min.css";
@@ -15,6 +16,7 @@ import ScrollPanel from "primevue/scrollpanel";
 
 import MultiSelect from "primevue/multiselect";
 
+import Dialog from "primevue/dialog";
 import SplitButton from "primevue/splitbutton";
 import Splitter from "primevue/splitter";
 import SplitterPanel from "primevue/splitterpanel";
@@ -51,5 +53,7 @@ app.component("SplitterPanel", SplitterPanel);
 app.component("Toolbar", Toolbar);
 app.component("SplitButton", SplitButton);
 app.component("MultiSelect", MultiSelect);
+app.component("Dropdown", Dropdown);
+app.component("Dialog", Dialog);
 
 app.mount("#app");

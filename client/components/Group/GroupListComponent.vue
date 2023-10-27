@@ -2,6 +2,7 @@
 
 import { onBeforeMount, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import CreateVote from "./CreateVote.vue";
 import GroupCard from "./GroupCard.vue";
 import GroupChatComponent from "./GroupChatComponent.vue";
 
@@ -14,6 +15,7 @@ const showChat = ref(false);
 const chatData = ref<Record<string, string>>();
 const chatMessage = ref("");
 const selectedUser = ref();
+const emit = defineEmits(["refreshVotes"]);
 const friends = ref<Array<string>>([]);
 
 async function getGroups() {
@@ -23,6 +25,28 @@ async function getGroups() {
     } catch (_) {
         return;
     }
+}
+
+async function inviteToGroup() {
+    // this function will deal inviting all of the users to a particular group
+
+    console.log(selectedUser.value);
+    // first check if there are even users to invite into
+    if (selectedUser.value === undefined) {
+        return;
+    }
+
+    let result;
+    try {
+        const group_id = chatData.value!._id;
+        // we need the group id and also the user id
+        // in this case we will only need to send one request to the user
+        result = await fetchy(`/api/group/${group_id}/${selectedUser.value}`, "PATCH");
+    } catch (_) {
+        return;
+    }
+
+    console.log(result);
 }
 
 async function createGroup() {
@@ -102,10 +126,8 @@ async function onPressEnter() {
 
 onBeforeMount(async () => {
     await getGroups();
-    console.log(groups.value);
     await getFriends();
     loaded.value = true;
-    console.log(friends.value);
 });
 
 </script>
@@ -155,23 +177,16 @@ onBeforeMount(async () => {
                         showChat = false;
                 }">
                     <div class="row">
-                        <i class="pi pi-check" style="font-size: 1rem"></i>
+                        <i class="pi pi-arrow-left" style="font-size: 1rem"></i>
                         <span>Back Button</span>
                     </div>
                 </Button>
-                <Button @click="() => {
-                    console.log('Create Vote');
-                }">
-                    <div class="row">
-                        <i class="pi pi-plus" style="font-size: 1rem"></i>
-                        <span>Create vote</span>
-                    </div>
-                </Button>
+                <CreateVote @refresh-votes="emit('refreshVotes')" :group-data="chatData"/>
             </div>
             <div class="row">
-                <MultiSelect v-model="selectedUser" :options="friends" placeholder="Select Users">
-                </MultiSelect>
-                <Button label="Invite" @click="() => {console.log(selectedUser)}"/>
+                <Dropdown v-model="selectedUser" :options="friends" placeholder="Select Users">
+                </Dropdown>
+                <Button label="Invite" @click="inviteToGroup"/>
             </div>
         </div>
         <ScrollPanel style="width: 100%; height: 80%; border-style: groove; border-width: 0.5em;">

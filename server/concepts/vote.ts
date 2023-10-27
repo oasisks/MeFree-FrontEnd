@@ -13,6 +13,7 @@ export interface VoteDoc extends BaseDoc {
   totalCount: Array<ObjectId>;
   startTime: Date;
   endTime: Date;
+  status: string;
 }
 
 export default class VoteConcept {
@@ -41,7 +42,8 @@ export default class VoteConcept {
   ) {
     await this.checkVoteType(banType);
     const yesCount = new Array<ObjectId>();
-    const _id = await this.votes.createOne({ initiator, title, reason, scope, target, yesCount, banType, totalCount, startTime, endTime });
+    const status = "pending";
+    const _id = await this.votes.createOne({ initiator, title, reason, scope, target, yesCount, banType, totalCount, startTime, endTime, status });
 
     return { msg: "Successfully created a vote", vote: await this.votes.readOne({ _id }) };
   }
@@ -52,19 +54,28 @@ export default class VoteConcept {
    * @param user the user who voted
    */
   async voteYes(_id: ObjectId, user: ObjectId) {
-    console.log("I am here");
     await this.voteExists(_id);
-    console.log("I am here");
     await this.userInVote(_id, user);
-    console.log("I am here");
     const vote = await this.votes.readOne({ _id });
-    console.log("I am here");
-    console.log(vote);
     if (vote) {
-      console.log("I ma here");
       vote.yesCount.push(user);
       await this.votes.updateOne({ _id }, vote);
       return { msg: "Successfully voted yes", yesCount: vote.yesCount };
+    }
+  }
+
+  async getVote(_id: ObjectId) {
+    return await this.votes.readOne({ _id });
+  }
+
+  async setStatus(_id: ObjectId, status: string) {
+    await this.voteExists(_id);
+    const vote = await this.votes.readOne({ _id });
+
+    if (vote) {
+      vote.status = status;
+      await this.votes.updateOne({ _id }, vote);
+      return { msg: "Successfully updated the status", vote };
     }
   }
 

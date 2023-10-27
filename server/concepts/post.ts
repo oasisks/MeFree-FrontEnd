@@ -29,7 +29,7 @@ export default class PostConcept {
   }
 
   async getPostById(_id: ObjectId) {
-    return await this.posts.readOne({ _id });
+    return  await this.posts.readOne({ _id });
   }
 
   async getByAuthor(author: ObjectId) {

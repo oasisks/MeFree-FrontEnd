@@ -1,4 +1,4 @@
-<script setup lang="ts">
+z<script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from 'vue';
@@ -33,14 +33,12 @@ const spotlightUsername = props.topic.title.replace("Spotlight: ", "");
 async function setButtons() {
   // this is the logic to check for friends
   props.friends.forEach((friend: Record<string, string>) => {
-      console.log(props.friends);
       if (spotlightUsername === friend) {
         areFriends.value = true;
       }
     })
   // we only care about spotlights not equal to the current username
   if (spotlightUsername !== currentUsername.value) {
-    console.log(props.requests);
     const requests = props.requests;
     // in this case, we don't even have a connection
     if (requests === undefined) {
@@ -67,7 +65,6 @@ async function setButtons() {
 
 onBeforeMount(async () => {
   await setButtons();
-  console.log(areFriends.value);
 });
 
 </script>

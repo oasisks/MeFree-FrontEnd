@@ -331,7 +331,7 @@ class Routes {
 
     // to vote someone out of the group, the initiator needs to pay a price
     // of 100 points
-    await Point.subPoints(initiator, 100);
+    // await Point.subPoints(initiator, 100);
 
     // we then create the vote
     const startTime = new Date();
@@ -450,6 +450,11 @@ class Routes {
     return await Vote.voteYes(_id, user);
   }
 
+  @Router.patch("/vote/:_id")
+  async setVoteStatus(_id: ObjectId, status: string) {
+    return await Vote.setStatus(_id, status);
+  }
+
   @Router.post("/components")
   async createComponent(componentType: ObjectId, width: string, height: string, fontSize: string, font: string, fontColor: string, xPos: string, yPos: string) {
     return await Component.createComponent(componentType, width, height, fontSize, font, fontColor, xPos, yPos);
@@ -507,6 +512,11 @@ class Routes {
       await Post.delete(post._id);
     });
     return await Spotlights.deleteSpotlight(_id);
+  }
+
+  @Router.get("/votes/:_id")
+  async getVote(_id: ObjectId) {
+    return await Vote.getVote(_id);
   }
 }
 

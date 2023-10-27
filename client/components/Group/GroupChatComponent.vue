@@ -9,7 +9,6 @@ const message = ref<Record<string, string>>();
 async function getPostMessage(id: string) {
     try {
         message.value = await fetchy(`/api/posts/post_ids/${id}`, "GET");
-        console.log(message.value);
     } catch(_) {
         return;
     }
