@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { fetchy } from "../../utils/fetchy";
+import GroupListComponent from "../Group/GroupListComponent.vue";
 import Spotlight from "../Spotlights/Spotlight.vue";
 
 
@@ -184,13 +185,7 @@ onBeforeMount(async () => {
             </TabPanel>
 
             <TabPanel header="Your Groups">
-                <section v-if="loaded && groups.length !== 0">
-                    <article v-for="group in groups" :key="group._id">
-                        <p>Insert a group component</p>
-                    </article>
-                </section>
-                <p v-else-if="loaded">No groups found :(</p>
-                <p v-else>Loading....</p>
+                <GroupListComponent />
             </TabPanel>
         </TabView>
         </div>

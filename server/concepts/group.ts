@@ -108,8 +108,8 @@ export default class GroupConcept {
     const group = await this.groups.readOne({ _id });
     if (group) {
       group.posts.push(post);
-      await this.groups.updateOne({ _id }, group);
-      return { msg: "Successfully added in a post" };
+      const update = await this.groups.updateOne({ _id }, group);
+      return { msg: "Successfully added in a post", group: await this.groups.readOne({ _id }) };
     }
   }
 

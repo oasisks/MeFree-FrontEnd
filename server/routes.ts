@@ -88,6 +88,11 @@ class Routes {
     return { msg: "Success", post: await Post.getByAuthor(_id) };
   }
 
+  @Router.get("/posts/post_ids/:_id")
+  async getPostById(_id: ObjectId) {
+    return Responses.post(await Post.getPostById(_id));
+  }
+
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string, options?: PostOptions) {
     const user = WebSession.getUser(session);
@@ -274,7 +279,7 @@ class Routes {
     return await Group.getAllGroups();
   }
 
-  @Router.patch("/groups/:_id/:invitee")
+  @Router.patch("/group/:_id/:invitee")
   async invite(session: WebSessionDoc, _id: ObjectId, invitee: string) {
     const inviter = WebSession.getUser(session);
     const inviteeId = (await User.getUserByUsername(invitee))._id;
@@ -399,8 +404,9 @@ class Routes {
     return await Group.giveOwnerShip(_id, initiator, newOwnerId);
   }
 
-  @Router.patch("/groups/:_id/:post")
+  @Router.patch("/groups/:_id")
   async addPost(_id: ObjectId, post: ObjectId) {
+    // return { msg: "Success" + post };
     return await Group.addPosts(_id, post);
   }
 

@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
 import FriendsView from "../views/FriendsView.vue";
-import GroupsView from "../views/GroupsView.vue";
+import GroupView from "../views/GroupView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
@@ -18,10 +18,8 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/groups",
-      name: "Groups",
-      component: GroupsView,
-      meta: { requiresAuth: true },
+      path: "/:group_id",
+      component: GroupView,
     },
     {
       path: "/friends",

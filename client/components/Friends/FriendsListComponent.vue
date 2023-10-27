@@ -27,7 +27,6 @@ async function getFriendRequests() {
             requests.value.push(request);
         }
     })
-
 }
 
 async function getFriends() {

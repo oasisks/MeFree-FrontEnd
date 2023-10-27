@@ -13,11 +13,15 @@ import "primevue/resources/primevue.min.css";
 import "primevue/resources/themes/lara-light-teal/theme.css";
 import ScrollPanel from "primevue/scrollpanel";
 
+import SplitButton from "primevue/splitbutton";
 import Splitter from "primevue/splitter";
 import SplitterPanel from "primevue/splitterpanel";
 import TabPanel from "primevue/tabpanel";
 import TabView from "primevue/tabview";
+
 import Textarea from "primevue/textarea";
+import Toolbar from "primevue/toolbar";
+
 import { createApp } from "vue";
 
 import Button from "primevue/button";
@@ -42,5 +46,7 @@ app.component("ScrollPanel", ScrollPanel);
 app.component("Divider", Divider);
 app.component("Splitter", Splitter);
 app.component("SplitterPanel", SplitterPanel);
+app.component("Toolbar", Toolbar);
+app.component("SplitButton", SplitButton);
 
 app.mount("#app");
