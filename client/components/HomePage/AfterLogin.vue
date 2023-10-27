@@ -165,9 +165,13 @@ async function getVotes() {
     result.forEach(async (group: Record<string, string>) => {
         const vote = group.votes;
         // we need to grab all of the votes that are pending
-        const votePromises = vote.map((v: string) => {
-            return fetchy(`/api/votes/${v}`, "GET");
-        })
+        const votePromises = [];
+
+        for (let i = 0; i < vote.length; i++) {
+            const v = vote[i];
+            votePromises.push(fetchy(`/api/votes/${v}`, "GET"));
+        }
+        
         const votingData = await Promise.all(votePromises);
         votingData.forEach((v: Record<string, string>) => {
             if (v.status === 'pending') {
@@ -205,7 +209,7 @@ onBeforeMount(async () => {
     <div v-if="isLoggedIn" class="row-tabs">
         <div class="column-home">
         <TabView>
-            <TabPanel header="Spotlights">
+            <TabPanel header="Spotlights" style="font-family: 'Roboto', sans-serif;">
                 <section v-if="loaded && spotlights.length !== 0">
                     <article v-for="topic in spotlights" :key="topic._id">
                         <Spotlight :topic="topic" :friends="friends" :requests="friendRequests.get(topic.title.replace('Spotlight: ', ''))"/>

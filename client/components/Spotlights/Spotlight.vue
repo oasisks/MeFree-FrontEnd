@@ -73,23 +73,28 @@ onBeforeMount(async () => {
 <template>
     <p class="author roboto-font">{{ props.topic.title }} </p>
     <p class="description "> {{ props.topic.content === "" ? empty_context : props.topic.content }} </p>
-    <Button v-if="currentUsername === props.topic.title.replace('Spotlight: ', '')">
+    <Button style="background-color: #FFE066; color: black; font-family: 'Roboto', sans-serif;
+" v-if="currentUsername === props.topic.title.replace('Spotlight: ', '')">
       Can't add your self :(
     </Button>
     <Button v-else-if="areFriends">
       Friends
     </Button>
-    <Button v-else-if="!fromMe && !toMe" @click="sendRequest">
+    <Button style="background-color: #449DD1; font-family: 'Roboto', sans-serif;
+" v-else-if="!fromMe && !toMe" @click="sendRequest">
       Send Friend Request
     </Button>
-    <Button v-else-if="fromMe && status === 'pending'">
+    <Button style="background-color: #4A484E; font-family: 'Roboto', sans-serif;
+" v-else-if="fromMe && status === 'pending'">
       Friend Request Already Sent
     </Button>
-    <Button v-else-if="status === 'rejected'">
+    <Button style="background-color: #A72608; font-family: 'Roboto', sans-serif;
+" v-else-if="status === 'rejected'">
       Rejected by user
     </Button>
 
-    <Button v-else-if="toMe && status === 'pending'">
+    <Button style="background-color: #4A484E; font-family: 'Roboto', sans-serif;
+" v-else-if="toMe && status === 'pending'">
       They send a friend request
     </Button>
     <Divider />
@@ -100,8 +105,12 @@ onBeforeMount(async () => {
 .author {
   font-weight: bold;
   font-size: 1.2em;
+  font-family: 'Roboto', sans-serif;
+
 }
 .description {
   white-space: pre-wrap;
+  font-family: 'Roboto', sans-serif;
+
 }
 </style>
