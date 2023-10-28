@@ -14,13 +14,13 @@ function onClick() {
         <Image src="/People.jpg" width="413" height="479"/>
         <div class="flex-container-column">
           <h1 class="BigText">made for groups</h1>
-          <h1 class="SmallText">one vote, set your rules</h1>
+          <h1 class="SmallText">a place to communicate</h1>
         </div>
       </div>
       <div class="flex-container-row-blue">
         <div class="flex-container-column">
-          <h1 class="BigText">freely customize</h1>
-          <h1 class="SmallText">made styling easy</h1>
+          <h1 class="BigText">Vote made easy</h1>
+          <h1 class="SmallText">one vote, one say</h1>
         </div>
         <Image src="/Gear.jpg"/>
       </div>
