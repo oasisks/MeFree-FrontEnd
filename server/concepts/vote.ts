@@ -14,6 +14,7 @@ export interface VoteDoc extends BaseDoc {
   startTime: Date;
   endTime: Date;
   status: string;
+  noCount: Array<ObjectId>;
 }
 
 export default class VoteConcept {
@@ -42,8 +43,9 @@ export default class VoteConcept {
   ) {
     await this.checkVoteType(banType);
     const yesCount = new Array<ObjectId>();
+    const noCount = new Array<ObjectId>();
     const status = "pending";
-    const _id = await this.votes.createOne({ initiator, title, reason, scope, target, yesCount, banType, totalCount, startTime, endTime, status });
+    const _id = await this.votes.createOne({ initiator, title, reason, scope, target, yesCount, banType, totalCount, startTime, endTime, status, noCount });
 
     return { msg: "Successfully created a vote", vote: await this.votes.readOne({ _id }) };
   }
@@ -61,6 +63,17 @@ export default class VoteConcept {
       vote.yesCount.push(user);
       await this.votes.updateOne({ _id }, vote);
       return { msg: "Successfully voted yes", yesCount: vote.yesCount };
+    }
+  }
+
+  async voteNo(_id: ObjectId, user: ObjectId) {
+    await this.voteExists(_id);
+    await this.userInVote(_id, user);
+    const vote = await this.votes.readOne({ _id });
+    if (vote) {
+      vote.noCount.push(user);
+      await this.votes.updateOne({ _id }, vote);
+      return { msg: "Successfully voted no", noCount: vote.noCount };
     }
   }
 

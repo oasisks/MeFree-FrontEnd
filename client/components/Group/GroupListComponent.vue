@@ -139,7 +139,7 @@ onBeforeMount(async () => {
             <span class="p-input-icon-left">
                 <i class="pi pi-search" />
                 <InputText placeholder="Search" v-model="searchQuery" />
-                <Button @click="searchGroup" label="Submit">
+                <Button @click="searchGroup" label="Submit" style="background-color: #449DD1;">
                     
                 </Button>
             </span>
@@ -149,9 +149,9 @@ onBeforeMount(async () => {
             <div class="column-create">
                 <div class="row-create">
                     <InputText type="text" placeholder="title" v-model="groupTitle"/>
-                    <Button v-if="groupTitle === ''" disabled label="Create Group">
+                    <Button v-if="groupTitle === ''" disabled label="Create Group" style="background-color: #A72608;">
                     </Button>
-                    <Button v-else @click="createGroup" label="Create Group">
+                    <Button v-else @click="createGroup" label="Create Group" style="background-color: #449DD1;">
                     </Button>
                 </div>
                 <small v-if="groupTitle === ''">Can't left blank</small>
@@ -189,7 +189,7 @@ onBeforeMount(async () => {
         </div>
         <ScrollPanel style="width: 100%; height: 80%; border-style: groove; border-width: 0.5em;">
         <div v-if="chatData !== undefined" v-for="post in chatData.posts">
-            <GroupChatComponent :post="post"/>
+            <GroupChatComponent :post="post" :censored-wordlist-id="chatData.censoredWordList"/>
         </div>
         </ScrollPanel>
         <div >

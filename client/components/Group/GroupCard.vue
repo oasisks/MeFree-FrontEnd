@@ -14,7 +14,7 @@ const emit = defineEmits(["showChat"]);
             {{ props.group.title }}
         </template>
         <template #content>
-            <Button @click="$emit('showChat', props.group)" label="Click here to access group">
+            <Button @click="$emit('showChat', props.group)" label="Click here to access group" style="background-color: #449DD1;">
                 
             </Button>
         </template>

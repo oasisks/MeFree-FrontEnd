@@ -446,8 +446,13 @@ class Routes {
   @Router.patch("/votes/:_id")
   async voteYes(session: WebSessionDoc, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    console.log(_id, user);
     return await Vote.voteYes(_id, user);
+  }
+
+  @Router.patch("/votes/nos/:_id")
+  async voteNo(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Vote.voteNo(_id, user);
   }
 
   @Router.patch("/vote/:_id")

@@ -161,12 +161,10 @@ async function getVotes() {
     } catch (_) {
         return;
     }
-    console.log(result)
     result.forEach(async (group: Record<string, string>) => {
         const vote = group.votes;
         // we need to grab all of the votes that are pending
         const votePromises = [];
-
         for (let i = 0; i < vote.length; i++) {
             const v = vote[i];
             votePromises.push(fetchy(`/api/votes/${v}`, "GET"));
@@ -175,8 +173,7 @@ async function getVotes() {
         const votingData = await Promise.all(votePromises);
         votingData.forEach((v: Record<string, string>) => {
             if (v.status === 'pending') {
-                console.log(v);
-                votes.value.set(v._id, group.title);
+                votes.value.set(v._id, group.title + " " + group.censoredWordList);
             }
         })
     });
@@ -238,11 +235,11 @@ onBeforeMount(async () => {
 
                             </Textarea>
                             <div class="row-flex">
-                                <Button @click="saveContent">
-                                    Save
+                                <Button @click="saveContent" label="Save" style="background-color: #449DD1;">
+                                    
                                 </Button>
-                                <Button @click="cancelEdit">
-                                    Cancel
+                                <Button @click="cancelEdit" label="Cancel" style="background-color: #A72608;">
+                                    
                                 </Button>
                             </div>
                         </div>
@@ -297,13 +294,12 @@ onBeforeMount(async () => {
 .row-flex {
     display: flex;
     flex-direction: row;
-    margin-top: 1em;
     gap: 2em;
 }
 
 .column-right {
     padding-left: 5em;
-    padding-top: 3em;
+    margin-top: 2em;
     display: flex;
     flex-direction: column;
     gap: 1em;

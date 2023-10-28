@@ -31,6 +31,8 @@ async function createVote() {
         return;
     }
     visible.value = false;
+    reasonRef.value = "";
+    wordRef.value = "";
     emit("refreshVotes");
 }
 </script>
